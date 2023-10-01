@@ -97,6 +97,8 @@ user = os.getenv("USER")
 now = datetime.datetime.now()
 time = now.strftime("%H:%M")
 
+git_branch = "git branch --no-color"
+
 sty_1 = Formatter(bg_color=[129, 161, 193])
 sty_2 = Formatter(bg_color=[94, 129, 172])
 sty_3 = Formatter(bg_color=[180, 142, 173])
