@@ -1,5 +1,6 @@
 import os
 import datetime
+from git_status import get_git_status
 
 SEP_1 = "\uE0B0"
 SEP_2 = "\uE0B2"
@@ -66,7 +67,7 @@ class Block:
         )
 
 class Powerline:
-    def __init__(self, *blocks, separator=SEP_1, left_to_right=True):
+    def __init__(self, blocks, separator=SEP_1, left_to_right=True):
         self.blocks = blocks 
         self.separator = separator
         self.left_to_right = left_to_right
@@ -120,21 +121,39 @@ block_3 = Block(
     sty_3
 )
 
-block_4 = Block(
+block_default = Block(
     f" ",
     Formatter.default()
 )
+
+right_blocks = [block_default]
+
+git_status = get_git_status()
+
+if git_status is not None:
+    remote_status = git_status["remote_delta"]
+    if remote_status is None:
+        remote_text = ""
+    else:
+        remote_text = f"({git_status['remote_delta']}) "
+
+    git_block = Block(
+        f" {git_status['branch']} {remote_text}",
+        sty_2
+    )
+    right_blocks.append(git_block)
+
 
 
 columns = int(os.getenv("COLUMNS"))
 
 powerline = Powerline(
-    block_1, block_2, block_3, block_4,
+    [block_1, block_2, block_3, block_default],
     separator=SEP_1
 )
 
 powerline_2 = Powerline(
-    block_4, block_3, block_2, block_1,
+    right_blocks,
     separator=SEP_2,
     left_to_right=False
 )
