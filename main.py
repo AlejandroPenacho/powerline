@@ -2,7 +2,9 @@ import os
 import datetime
 
 SEP_1 = "\uE0B0"
-SEP_2 = "\uE0B1"
+SEP_2 = "\uE0B2"
+SEP_3 = "\u25B6"
+SEP_4 = "\u25B8"
 
 class Formatter:
     def __init__(self, fg_color=None, bg_color=None):
@@ -128,12 +130,12 @@ columns = int(os.getenv("COLUMNS"))
 
 powerline = Powerline(
     block_1, block_2, block_3, block_4,
-    separator="\uE0B4"
+    separator=SEP_1
 )
 
 powerline_2 = Powerline(
     block_4, block_3, block_2, block_1,
-    separator="\uE0B6",
+    separator=SEP_2,
     left_to_right=False
 )
 
