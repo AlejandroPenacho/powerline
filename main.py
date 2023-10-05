@@ -96,6 +96,7 @@ class Powerline:
 
 
 cwd = os.getenv("PWD")
+conda_env = os.getenv("CONDA_DEFAULT_ENV")
 user = os.getenv("USER")
 now = datetime.datetime.now()
 time = now.strftime("%H:%M")
@@ -106,27 +107,45 @@ sty_1 = Formatter(bg_color=[129, 161, 193])
 sty_2 = Formatter(bg_color=[94, 129, 172])
 sty_3 = Formatter(bg_color=[180, 142, 173])
 
-block_1 = Block(
+all_left_blocks = []
+
+time_block = Block(
     f" {time} ",
     sty_1
 )
+all_left_blocks.append(time_block)
 
-block_2 = Block(
+
+if conda_env is not None:
+    conda_block = Block(
+        f" {conda_env} ",
+        sty_2
+    )
+    all_left_blocks.append(conda_block)
+
+
+user_block = Block(
     f" {user} ",
-    sty_2
-)
-
-block_3 = Block(
-    f" {cwd} ",
     sty_3
 )
+all_left_blocks.append(user_block)
 
-block_default = Block(
+
+cwd_block = Block(
+    f" {cwd} ",
+    sty_1
+)
+all_left_blocks.append(cwd_block)
+
+
+clean_block = Block(
     f" ",
     Formatter.default()
 )
+all_left_blocks.append(clean_block)
 
-right_blocks = [block_default]
+
+all_right_blocks = [clean_block]
 
 git_status = get_git_status()
 
@@ -141,19 +160,19 @@ if git_status is not None:
         f" {git_status['branch']} {remote_text}",
         sty_2
     )
-    right_blocks.append(git_block)
+    all_right_blocks.append(git_block)
 
 
 
 columns = int(os.getenv("COLUMNS"))
 
 powerline = Powerline(
-    [block_1, block_2, block_3, block_default],
+    all_left_blocks,
     separator=SEP_1
 )
 
 powerline_2 = Powerline(
-    right_blocks,
+    all_right_blocks,
     separator=SEP_2,
     left_to_right=False
 )
